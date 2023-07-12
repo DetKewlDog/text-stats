@@ -67,7 +67,6 @@ function countWords(str) {
 function countDuplicateWords(str) {
 	const wordList = getAllWords(str);
 	return wordList.filter(word => {
-		console.log(word);
 		const letters = word.split(''); // gets all letters
 		// a set eleminates any duplicate elements from the original array.
 		// if there were duplicates, they'd be removed and the length of the letters set would be changed
