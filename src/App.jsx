@@ -76,12 +76,23 @@ function countDuplicateWords(str) {
 }
 
 function App() {
-	const [text, setText] = useState('');
-	const [history, setHistory] = useState([]);
+	const [text, setText] = useState(localStorage.getItem('text') || '');
+	const [history, setHistory] = useState(JSON.parse(localStorage.getItem('history')) || []);
 
 	useEffect(() => {
 		document.querySelector('#inText').value = text;
 	}, [text, history]);
+
+	// function to cache the history
+	const updateHistory = (newHistory) => {
+		setHistory(newHistory);
+		localStorage.setItem('history', JSON.stringify(newHistory));
+	}
+	// function to cache the input text
+	const updateText = (newText) => {
+		setText(newText);
+		localStorage.setItem('text', newText);
+	}
 
 	const handleInputSubmit = (e) => {
 		if (e.key !== 'Enter') return; // accept input when user presses enter
@@ -91,16 +102,16 @@ function App() {
 		if (!history.includes(e.target.value)) {
 			const newHistory = [e.target.value, ...history];
 			if (newHistory.length > 15) newHistory.pop(); // we clamp the history to 15 entries
-			setHistory(newHistory); // we add the new entry to the history
+			updateHistory(newHistory); // we add the new entry to the history
 		}
 
 		// we load the stats of the specified entry
-		setText(e.target.value);
+		updateText(e.target.value);
 	};
 
 	const deleteFromHistory = (e, index) => {
 		e.preventDefault();
-		setHistory(history.filter((_, i) => i !== index)); // we filter out the specified entry from the history
+		updateHistory(history.filter((_, i) => i !== index)); // we filter out the specified entry from the history
 	}
 
 	return (
@@ -109,7 +120,7 @@ function App() {
 				<h2>Input History</h2>
 				{history.map((entry, index) => (
 					<li key={index}
-						onClick={() => setText(entry)} // load an entry from the history on left click
+						onClick={() => updateText(entry)} // load an entry from the history on left click
 						onContextMenu={e => deleteFromHistory(e, index)} // remove an entry from the history on right click
 					>
 						{entry}
