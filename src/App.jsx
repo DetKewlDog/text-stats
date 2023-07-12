@@ -76,6 +76,7 @@ function countDuplicateWords(str) {
 }
 
 function App() {
+	// fetch local cache in case it contains values for these variables
 	const [text, setText] = useState(localStorage.getItem('text') || '');
 	const [history, setHistory] = useState(JSON.parse(localStorage.getItem('history')) || []);
 
